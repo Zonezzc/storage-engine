@@ -1,23 +1,27 @@
-package com.yarzzc.storage.engine.kodo.config;
+package com.zonezzc.storage.engine.kodo.config;
 
 import cn.hutool.core.util.StrUtil;
 import com.qiniu.util.Auth;
+import com.zonezzc.storage.engine.kodo.KodoStorageEngine;
 import lombok.Data;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
 
 /**
  * COS文件存储引擎配置类
  *
- * @author Zhuzhicheng
+ * @author Zonezzc
  * @date 2023/7/28
  * @since
  */
 @Data
 @Component
 @ConfigurationProperties(prefix = "com.zonezzc.storage.engine.kodo")
-public class KodoStorageEngineConfig {
+public class KodoStorageEngineConfig implements InitializingBean {
 
 	/** 端点 */
 	private String region;
@@ -45,5 +49,17 @@ public class KodoStorageEngineConfig {
 			throw new IllegalArgumentException("endpoint/accessKeyId/accessKeySecret must not be null");
 		}
 		return Auth.create(accessKey, secretKey);
+	}
+
+	@Configuration
+	@Import(KodoStorageEngine.class)
+	public static class MapperScannerRegistrarNotFoundConfiguration implements InitializingBean {
+		@Override
+		public void afterPropertiesSet() {
+		}
+	}
+
+	@Override
+	public void afterPropertiesSet() {
 	}
 }

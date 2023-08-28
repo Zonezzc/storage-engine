@@ -6,7 +6,7 @@ import lombok.Data;
 /**
  * 文件下载路径的上下文实体信息
  *
- * @author Zhuzhicheng
+ * @author Zonezzc
  * @date 2023/8/22
  * @since
  */

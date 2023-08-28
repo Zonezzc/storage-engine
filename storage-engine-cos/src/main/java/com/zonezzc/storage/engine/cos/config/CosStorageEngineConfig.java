@@ -7,22 +7,26 @@ import com.qcloud.cos.auth.BasicCOSCredentials;
 import com.qcloud.cos.auth.COSCredentials;
 import com.qcloud.cos.http.HttpProtocol;
 import com.qcloud.cos.region.Region;
+import com.zonezzc.storage.engine.cos.CosStorageEngine;
 import lombok.Data;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
 
 /**
  * COS文件存储引擎配置类
  *
- * @author Zhuzhicheng
+ * @author Zonezzc
  * @date 2023/7/28
  * @since
  */
 @Data
 @Component
 @ConfigurationProperties(prefix = "com.zonezzc.storage.engine.cos")
-public class CosStorageEngineConfig {
+public class CosStorageEngineConfig implements InitializingBean {
 
 	/** 端点 */
 	private String region;
@@ -60,5 +64,19 @@ public class CosStorageEngineConfig {
 		clientConfig.setHttpProtocol(HttpProtocol.https);
 		// 3 生成 cos 客户端。
 		return new COSClient(cred, clientConfig);
+	}
+
+	@Configuration
+	@Import(CosStorageEngine.class)
+	public static class MapperScannerRegistrarNotFoundConfiguration implements InitializingBean {
+
+		@Override
+		public void afterPropertiesSet() {
+		}
+
+	}
+
+	@Override
+	public void afterPropertiesSet() {
 	}
 }
